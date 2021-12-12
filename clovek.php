@@ -3,6 +3,7 @@ require_once("./db_connect.inc.php");
 $chyba = "";
 if(isset($_GET["ClovekId"])){
     $ClovekId = filter_input(INPUT_GET, "ClovekId");
+    
     $stmt = $pdo->query("SELECT e.name AS ename, e.surname AS esurname, e.job AS ejob, e.wage AS ewage,
     r.name AS rname, r.room_id AS rid FROM employee e INNER JOIN room r ON e.room=r.room_id WHERE e.employee_id=$ClovekId");
         if($stmt->rowCount() === 0){
@@ -12,26 +13,7 @@ if(isset($_GET["ClovekId"])){
         }
         else{
             http_response_code(200);
-            $row = $stmt->fetch();
             $title = "Karta osoby {$row->esurname} {$row->ename[0]}.";
-            echo "<h1>Karta osoby: <i>{$row->esurname} {$row->ename[0]}</i>. </h1>";
-            echo "<table class='table'>";
-            
-            echo "<tr><th>Jméno</th><td>$row->ename</td></tr>";
-            echo "<tr><th>Příjmení</th><td>$row->esurname</td></tr>";
-            echo "<tr><th>Pozice</th><td>$row->ejob</td></tr>";
-            echo "<tr><th>Mzda</th><td>$row->ewage</td></tr>";
-            echo "<tr><th>Místnost</th><td><a href='./mistnost.php?mistnostId={$row->rid}'>{$row->rname}</a></td></tr>";
-
-            $stmt = $pdo->query("SELECT r.name AS name, r.room_id AS room_id FROM `key` k INNER JOIN room r ON k.room=r.room_id WHERE employee=$ClovekId");
-            $index = 0;
-            while($row = $stmt->fetch()){
-                echo "<tr><th>".($index===0?"Místnosti":"")."</th><td><a href='./mistnost.php?mistnostId={$row->room_id}'>$row->name</a></td></tr>";
-                $index++;
-            }
-            
-            echo "</table>";
-            echo "<a href='./zamestnanci.php'>Zpět na seznam zaměstnanců</a>";
         }
     
 }
@@ -55,6 +37,28 @@ else{
 </head>
 <body class="container">
 <?php
+if(!$chyba){
+    $row = $stmt->fetch();
+    echo "<h1>Karta osoby: <i>{$row->esurname} {$row->ename[0]}</i>. </h1>";
+    echo "<table class='table'>";
+    
+    echo "<tr><th>Jméno</th><td>$row->ename</td></tr>";
+    echo "<tr><th>Příjmení</th><td>$row->esurname</td></tr>";
+    echo "<tr><th>Pozice</th><td>$row->ejob</td></tr>";
+    echo "<tr><th>Mzda</th><td>$row->ewage</td></tr>";
+    echo "<tr><th>Místnost</th><td><a href='./mistnost.php?mistnostId={$row->rid}'>{$row->rname}</a></td></tr>";
+
+    $stmt = $pdo->query("SELECT r.name AS name, r.room_id AS room_id FROM `key` k INNER JOIN room r ON k.room=r.room_id WHERE employee=$ClovekId");
+    $index = 0;
+    while($row = $stmt->fetch()){
+        echo "<tr><th>".($index===0?"Místnosti":"")."</th><td><a href='./mistnost.php?mistnostId={$row->room_id}'>$row->name</a></td></tr>";
+        $index++;
+    }
+    
+    echo "</table>";
+    echo "<a href='./zamestnanci.php'>Zpět na seznam zaměstnanců</a>";
+}
+
 echo $chyba;
 ?>
 </body>
