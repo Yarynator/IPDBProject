@@ -10,6 +10,7 @@ if(isset($_GET["mistnostId"])){
         $chyba = "<h1>404 Not Found</h1><p>Stránka nenalezena</p>";
         http_response_code(404);
     }else{
+        http_response_code(200);
         $title = "Karta místnosti č. {$row->no}";
     }
 }
@@ -33,7 +34,6 @@ else{
 <body class="container">
 <?php
 if(!$chyba){
-    http_response_code(200);
         $row = $stmt->fetch();
         echo "<h1>Místnost č. {$row->no}</h1>";
         echo "<table class='table'>";
