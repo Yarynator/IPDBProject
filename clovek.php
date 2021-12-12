@@ -2,7 +2,7 @@
 require_once("./db_connect.inc.php");
 $chyba = "";
 if(isset($_GET["ClovekId"])){
-    $ClovekId = $_GET["ClovekId"];
+    $ClovekId = filter_input(INPUT_GET, "ClovekId");
     $stmt = $pdo->query("SELECT e.name AS ename, e.surname AS esurname, e.job AS ejob, e.wage AS ewage,
     r.name AS rname, r.room_id AS rid FROM employee e INNER JOIN room r ON e.room=r.room_id WHERE e.employee_id=$ClovekId");
         if($stmt->rowCount() === 0){
