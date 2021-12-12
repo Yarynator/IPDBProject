@@ -36,9 +36,9 @@ if(isset($_GET["ClovekId"])){
     
 }
 else{
-    $title = "404 Not Found";
-    $chyba = "<h1>404 Not Found</h1><p>Stránka nenalezena</p>";
-    http_response_code(404);
+    $title = "400 Bad Request";
+    $chyba = "<h1>400 Bad Request</h1><p>Špatný požadavek</p>";
+    http_response_code(400);
 }
 
 ?>
