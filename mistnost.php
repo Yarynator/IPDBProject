@@ -1,5 +1,6 @@
 <?php
 require_once("./db_connect.inc.php");
+
 $chyba = "";
 if(isset($_GET["mistnostId"])){
     $mistnostId = filter_input(INPUT_GET, "mistnostId");
@@ -8,11 +9,32 @@ if(isset($_GET["mistnostId"])){
         $title = "400 Not Found";
         $chyba = "<h1>404 Not Found</h1><p>Stránka nenalezena</p>";
         http_response_code(404);
-    }
-    else{
-        http_response_code(200);
-        $row = $stmt->fetch();
+    }else{
         $title = "Karta místnosti č. {$row->no}";
+    }
+}
+else{
+    $title = "400 Bad Request";
+    $chyba = "<h1>400 Bad Request</h1><p>Špatný požadavek</p>";
+    http_response_code(400);
+}
+?>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</head>
+<body class="container">
+<?php
+if(!$chyba){
+    http_response_code(200);
+        $row = $stmt->fetch();
         echo "<h1>Místnost č. {$row->no}</h1>";
         echo "<table class='table'>";
 
@@ -52,28 +74,7 @@ if(isset($_GET["mistnostId"])){
 
         echo "</table>";
         echo "<a href='./mistnosti.php'>Zpět na seznam místností</a>";
-    }
 }
-else{
-    $title = "400 Bad Request";
-    $chyba = "<h1>400 Bad Request</h1><p>Špatný požadavek</p>";
-    http_response_code(400);
-}
-
-?>
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $title ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-</head>
-<body class="container">
-<?php
 echo $chyba;
 ?>
 </body>
