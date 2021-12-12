@@ -34,46 +34,46 @@ else{
 <body class="container">
 <?php
 if(!$chyba){
-        $row = $stmt->fetch();
-        echo "<h1>Místnost č. {$row->no}</h1>";
-        echo "<table class='table'>";
+    $row = $stmt->fetch();
+    echo "<h1>Místnost č. {$row->no}</h1>";
+    echo "<table class='table'>";
 
-        echo "<tr><th>Číslo</th><td>{$row->no}</td></tr>";
-        echo "<tr><th>Název</th><td>{$row->name}</td></tr>";
-        echo "<tr><th>Telefon</th><td>{$row->phone}</td></tr>";
+    echo "<tr><th>Číslo</th><td>{$row->no}</td></tr>";
+    echo "<tr><th>Název</th><td>{$row->name}</td></tr>";
+    echo "<tr><th>Telefon</th><td>{$row->phone}</td></tr>";
 
-        $stmt = $pdo->query("SELECT name, surname, wage, employee_id FROM employee WHERE room=$mistnostId");
+    $stmt = $pdo->query("SELECT name, surname, wage, employee_id FROM employee WHERE room=$mistnostId");
+    $index = 0;
+    $prumernaMzda = 0;
+    if($stmt->rowCount() === 0){
+        echo "<tr><th>Lidé</th><td>-</td></tr>";
+        echo "<tr><th>Průměrná mzda</th><td>-</td></tr>";
+    }
+    else {
+        while($row = $stmt->fetch()){
+            echo "<tr><th>".($index===0?"Lidé":"")."</th><td><a href='./clovek.php?ClovekId={$row->employee_id}'>{$row->name} {$row->surname}</a></td></tr>";
+            $prumernaMzda+=$row->wage;
+        $index++;
+        }
+        $prumernaMzda/=$index;
+        echo "<tr><th>Průměrná mzda</th><td>$prumernaMzda</td></tr>";
+    }
+
+    $stmt = $pdo->query("SELECT e.name AS name, e.surname AS surname, e.employee_id AS employee_id FROM `key` k INNER JOIN employee e ON k.employee=e.employee_id WHERE k.room=$mistnostId");
+    if($stmt->rowCount() === 0){
+        echo "<tr><th>Klíče</th><td>-</td></tr>";
+    }
+    else{
         $index = 0;
-        $prumernaMzda = 0;
-        if($stmt->rowCount() === 0){
-            echo "<tr><th>Lidé</th><td>-</td></tr>";
-            echo "<tr><th>Průměrná mzda</th><td>-</td></tr>";
-        }
-        else {
-            while($row = $stmt->fetch()){
-                echo "<tr><th>".($index===0?"Lidé":"")."</th><td><a href='./clovek.php?ClovekId={$row->employee_id}'>{$row->name} {$row->surname}</a></td></tr>";
-                $prumernaMzda+=$row->wage;
+        while($row = $stmt->fetch()){
+            echo "<tr><th>".($index === 0 ? "Klíče" : "")."</th><td><a href='./clovek.php?ClovekId={$row->employee_id}'>{$row->name} {$row->surname}</a></td></tr>";
+
             $index++;
-            }
-            $prumernaMzda/=$index;
-            echo "<tr><th>Průměrná mzda</th><td>$prumernaMzda</td></tr>";
         }
+    }
 
-        $stmt = $pdo->query("SELECT e.name AS name, e.surname AS surname, e.employee_id AS employee_id FROM `key` k INNER JOIN employee e ON k.employee=e.employee_id WHERE k.room=$mistnostId");
-        if($stmt->rowCount() === 0){
-            echo "<tr><th>Klíče</th><td>-</td></tr>";
-        }
-        else{
-            $index = 0;
-            while($row = $stmt->fetch()){
-                echo "<tr><th>".($index === 0 ? "Klíče" : "")."</th><td><a href='./clovek.php?ClovekId={$row->employee_id}'>{$row->name} {$row->surname}</a></td></tr>";
-
-                $index++;
-            }
-        }
-
-        echo "</table>";
-        echo "<a href='./mistnosti.php'>Zpět na seznam místností</a>";
+    echo "</table>";
+    echo "<a href='./mistnosti.php'>Zpět na seznam místností</a>";
 }
 echo $chyba;
 ?>
