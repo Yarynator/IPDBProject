@@ -1,7 +1,7 @@
 <?php
 require_once("./db_connect.inc.php");
 
-$getSort = $_GET["poradi"];
+$getSort = filter_input(INPUT_GET, "poradi"):
 if($getSort === "name_up")
     $sorting = "NameUp";
 else if($getSort === "number_down")
