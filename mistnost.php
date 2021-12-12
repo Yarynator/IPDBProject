@@ -2,7 +2,7 @@
 require_once("./db_connect.inc.php");
 $chyba = "";
 if(isset($_GET["mistnostId"])){
-    $mistnostId = $_GET["mistnostId"];
+    $mistnostId = filter_input(INPUT_GET, "mistnostId");
     $stmt = $pdo->query("SELECT no, name, phone FROM room r WHERE r.room_id=$mistnostId");
     if($stmt->rowCount() === 0){
         $title = "400 Not Found";
